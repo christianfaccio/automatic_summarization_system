@@ -1,5 +1,7 @@
 import fitz  #PyMuPDF
+import re
 import os
+import json
 
 def extract_text_from_pdfs(docs_folder):
     corpus_text = {}
@@ -38,3 +40,21 @@ def extract_text_from_pdfs(docs_folder):
             print(f"Finished: {filename}")
             
     return corpus_text
+
+
+def segment_by_articles(text):
+    # Find "Artículo 1.", "Artículo 2.", etc. We divide the text by articles
+    pattern = r'(Artículo\s+\d+\.)'
+    
+    # Split the text by the pattern
+    parts = re.split(pattern, text)
+    
+    articles_dict = {}
+    # Iterate through the split parts (skip first part because is the header)
+    for i in range(1, len(parts), 2):
+        article_title = parts[i].strip()
+        article_content = parts[i+1].strip()
+        articles_dict[article_title] = article_content
+        
+    return articles_dict
+
