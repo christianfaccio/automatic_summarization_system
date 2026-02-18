@@ -1,8 +1,6 @@
 import fitz  #PyMuPDF
 import os
 
-CORPUS_DIR = "docs"
-
 def extract_text_from_pdfs(docs_folder):
     corpus_text = {}
 
@@ -40,8 +38,3 @@ def extract_text_from_pdfs(docs_folder):
             print(f"Finished: {filename}")
             
     return corpus_text
-
-
-corpus = extract_text_from_pdfs(CORPUS_DIR)
-
-print(corpus["ayudas_21-22.pdf"])
