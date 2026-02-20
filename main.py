@@ -17,5 +17,5 @@ for filename, text in corpus.items():
     all_scholarships.append(scholarship_data)
 
 # Save the master "Ground Truth" file
-with open("output/scholarship_corpus.json", "w", encoding="utf-8") as f:
+with open("output/scholarship_corpus_mistral.json", "w", encoding="utf-8") as f:
     json.dump(all_scholarships, f, indent=4, ensure_ascii=False)

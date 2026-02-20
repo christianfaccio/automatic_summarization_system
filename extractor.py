@@ -69,7 +69,7 @@ EXTRACTION_TASKS = {
     },
     "Artículo 48.": {
         "source": "general_info",
-        "prompt": "Identify the deadlines. Return JSON: {deadlines: {university: str, non_university: str}}."
+        "prompt": "Identify the deadlines. Return JSON: {deadlines: {university: str, non_university: str, exception: str}}."
     },
     "Artículo 3.": {
         "key": "eligible_programs",
@@ -96,7 +96,7 @@ def call_llm_for_json(prompt, context):
     full_prompt = f"TEXTO DEL DOCUMENTO: \n{context}\n\nINSTRUCCIÓN:\n{prompt}"
 
     completion = client.chat.completions.create(
-        model="meta-llama/llama-3.3-70b-instruct", 
+        model="mistralai/mistral-small-3.2-24b-instruct", 
         messages=[
             {"role": "system", "content": system_msg},
             {"role": "user", "content": full_prompt}

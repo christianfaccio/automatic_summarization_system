@@ -1,0 +1,241 @@
+[
+    {
+        "general_info": {
+            "academic_year": "2021-2022",
+            "deadlines": {
+                "university": "2021-10-14",
+                "non_university": "2021-09-30",
+                "exception": "2021-12-31"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster, incluidos los estudios de grado y máster cursados en los centros universitarios de la defensa y de la guardia civil",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster y créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior, incluidos los estudios de formación profesional realizados en los centros docentes militares",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas, incluida la modalidad de distancia",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional y cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior impartidos en centros públicos y en centros privados concertados que tengan autorizadas enseñanzas de formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 1600.0,
+            "excellence_range": {
+                "8.00-8.49": 50.0,
+                "8.50-8.99": 75.0,
+                "9.00-9.49": 100.0,
+                "9.50+": 125.0
+            },
+            "basic_scholarship": 300.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "academic_year": "2022-2023",
+            "deadlines": {
+                "university": "2022-05-12T24:00",
+                "non_university": "2022-05-12T24:00",
+                "exception": "2022-12-31"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster, incluidos los estudios de grado y máster cursados en los centros universitarios de la defensa y de la guardia civil.",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas.",
+                "Complementos de formación para acceso u obtención del título de máster y créditos complementarios para la obtención del título de grado."
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato.",
+                "Formación Profesional de grado medio y de grado superior, incluidos los estudios de formación profesional realizados en los centros docentes militares.",
+                "Enseñanzas artísticas profesionales.",
+                "Enseñanzas deportivas.",
+                "Enseñanzas artísticas superiores.",
+                "Estudios religiosos superiores.",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas, incluida la modalidad de distancia.",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior impartidos en centros públicos y en centros privados concertados que tengan autorizadas enseñanzas de formación profesional.",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 1600.0,
+            "excellence_range": {
+                "8.00-8.49": 50.0,
+                "8.50-8.99": 75.0,
+                "9.00-9.49": 100.0,
+                "9.50+": 125.0
+            },
+            "basic_scholarship": {
+                "general": 300.0,
+                "basic_cycle": 350.0
+            },
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "academic_year": "2023-2024",
+            "deadlines": {
+                "university": "2023-05-17T24:00",
+                "non_university": "2023-05-17T24:00",
+                "exception": "2023-12-31"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster, incluidos los estudios de grado y máster cursados en los centros universitarios de la defensa y de la guardia civil, así como los cursados en el Centro Universitario de Formación de la Policía Nacional, O.A.",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas.",
+                "Complementos de formación para acceso u obtención del título de máster y créditos complementarios para la obtención del título de grado."
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato.",
+                "Formación Profesional de grado medio y de grado superior, incluidos los estudios de formación profesional realizados en los centros docentes militares.",
+                "Enseñanzas artísticas profesionales.",
+                "Enseñanzas deportivas.",
+                "Enseñanzas artísticas superiores.",
+                "Estudios religiosos superiores.",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas, incluida la modalidad de distancia.",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional y cursos de formación específicos para el acceso a los ciclos formativos de concertados que tengan autorizadas enseñanzas de formación profesional.",
+                "Ciclos Formativos de Grado Básico."
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2500.0,
+            "excellence_range": {
+                "8.00-8.49": 50.0,
+                "8.50-8.99": 75.0,
+                "9.00-9.49": 100.0,
+                "9.50+": 125.0
+            },
+            "basic_scholarship": 300.0,
+            "basic_scholarship_basic_vocational": 350.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "academic_year": "2024-2025",
+            "deadlines": {
+                "university": "2024-05-10T15:00",
+                "non_university": "2024-05-10T15:00",
+                "exception": "2024-12-31"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio",
+                "Ciclos de Formación Profesional de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales",
+                "Cursos de acceso a la formación profesional",
+                "Cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado medio",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado superior"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2500.0,
+            "excellence_range": {
+                "8.00-8.49": 50.0,
+                "8.50-8.99": 75.0,
+                "9.00-9.49": 100.0,
+                "9.50+": 125.0
+            },
+            "basic_scholarship": 300.0,
+            "basic_scholarship_basic_vocational": 350.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "academic_year": "2025-2026",
+            "deadlines": {
+                "university": "2025-03-24T08:00 to 2025-05-14T15:00",
+                "non_university": "2025-03-24T08:00 to 2025-05-14T15:00",
+                "exception": "2025-12-31"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas artísticas superiores",
+                "Enseñanzas universitarias del sistema universitario español",
+                "Estudios de grado",
+                "Máster cursados en los centros universitarios de la defensa y de la guardia civil",
+                "Cursados en el Centro Universitario de Formación de la Policía Nacional, O.A.",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio",
+                "Ciclos de Formación Profesional de grado superior",
+                "Estudios de formación profesional realizados en los centros docentes militares",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior impartidos en centros públicos y en centros privados concertados",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2700.0,
+            "excellence_range": {
+                "8.00-8.49": 50.0,
+                "8.50-8.99": 75.0,
+                "9.00-9.49": 100.0,
+                "9.50+": 125.0
+            },
+            "basic_scholarship": {
+                "general": 300.0,
+                "basic_vocational_courses": 350.0
+            },
+            "min_variable": 600.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    }
+]
