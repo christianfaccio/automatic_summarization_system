@@ -10,7 +10,9 @@ all_scholarships = []
 for filename, text in corpus.items():
     segmented_doc = extractor.segment_by_articles(text) 
     
+    print(f"Processing file {filename}...")
     scholarship_data = extractor.extract_full_corpus_data(segmented_doc, text)
+    print(f"Finished processing file {filename}")
     
     all_scholarships.append(scholarship_data)
 

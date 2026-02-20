@@ -38,7 +38,7 @@ def extract_text_from_pdfs(docs_folder):
                 full_text.append("\n".join(lines))
             
             corpus_text[filename] = "\n".join(full_text)
-            print(f"Finished: {filename}")
+            print(f"Finished extracting text from: {filename}")
             
     return corpus_text
 
@@ -77,7 +77,7 @@ EXTRACTION_TASKS = {
     },
     "Artículo 11.": {
         "key": "scholarship_amounts",
-        "prompt": "Extract fixed/variable amounts. JSON keys: fixed_income, fixed_residence, excellence_range, basic_scholarship, min_variable."
+        "prompt": "Extract fixed/variable amounts. JSON keys: fixed_income, fixed_residence, excellence_range (dict with gpas as keys), basic_scholarship, min_variable."
     },
     "Artículo 8.": {
         "key": "academic_requirements",
