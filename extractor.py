@@ -64,11 +64,11 @@ def segment_by_articles(text):
 # 1. Configuration of prompts and targets
 EXTRACTION_TASKS = {
     "General": {
-        "source": "academic_year", # Custom key for the beginning of the text
+        "source": "general_info", # Custom key for the beginning of the text
         "prompt": "Identify the academic year (e.g., 2024-2025). Return JSON: {academic_year: str}."
     },
     "Artículo 48.": {
-        "source": "deadlines", # Custom key for the beginning of the text
+        "source": "general_info",
         "prompt": "Identify the deadlines. Return JSON: {deadlines: {university: str, non_university: str}}."
     },
     "Artículo 3.": {
@@ -126,6 +126,11 @@ def extract_full_corpus_data(segmented_doc, raw_text):
             
             # Merge into the final document structure
             key = task.get("key", "general_info")
-            final_json[key] = extracted_part
+
+            # SI LA LLAVE YA EXISTE, MEZCLAMOS (para que convivan año y plazos)
+            if key in final_json and isinstance(final_json[key], dict):
+                final_json[key].update(extracted_part)
+            else:
+                final_json[key] = extracted_part
             
     return final_json
