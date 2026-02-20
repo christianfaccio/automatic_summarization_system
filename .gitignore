@@ -5,3 +5,4 @@
 *.xml
 *.gz
 __pycache__/
+*.env
