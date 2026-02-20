@@ -90,7 +90,7 @@ def call_llm_for_json(prompt, context):
     system_msg = "You are a legal data extractor. Output ONLY raw JSON."
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="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", 
+        api_key="API_KEY", # Replace with the actual API KEY 
     )
 
     full_prompt = f"TEXTO DEL DOCUMENTO: \n{context}\n\nINSTRUCCIÓN:\n{prompt}"
