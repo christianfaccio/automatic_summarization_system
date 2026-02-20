@@ -1,0 +1,211 @@
+[
+    {
+        "general_info": {
+            "deadlines": {
+                "university": "14 de octubre de 2021",
+                "non_university": "30 de septiembre de 2021"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 1600.0,
+            "excellence_range": {
+                "min": 50,
+                "max": 125
+            },
+            "basic_scholarship": {
+                "standard": 300.0,
+                "ciclos_formativos": 350.0
+            },
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "deadlines": {
+                "university": "30 de marzo de 2022 hasta el 12 de mayo de 2022",
+                "non_university": "30 de marzo de 2022 hasta el 12 de mayo de 2022"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas",
+                "Ciclos Formativos de Grado Básico",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 1600.0,
+            "excellence_range": {
+                "min": 50,
+                "max": 125
+            },
+            "basic_scholarship": {
+                "normal": 300.0,
+                "ciclos_formativos": 350.0
+            },
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "deadlines": {
+                "university": "27 de marzo de 2023 hasta el 17 de mayo de 2023",
+                "non_university": "27 de marzo de 2023 hasta el 17 de mayo de 2023"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2500.0,
+            "excellence_range": {
+                "min": 50,
+                "max": 125
+            },
+            "basic_scholarship": 300.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "deadlines": {
+                "university": "19 de marzo de 2024, a las 9,00, hora peninsular, hasta el 10 de mayo de 2024, a las 15,00, hora peninsular",
+                "non_university": "19 de marzo de 2024, a las 9,00, hora peninsular, hasta el 10 de mayo de 2024, a las 15,00, hora peninsular"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2500.0,
+            "excellence_range": {
+                "min": 50,
+                "max": 125
+            },
+            "basic_scholarship": 300.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    },
+    {
+        "general_info": {
+            "deadlines": {
+                "university": "24 de marzo de 2025, a las 8,00, hora peninsular, hasta el 14 de mayo de 2025, a las 15,00, hora peninsular",
+                "non_university": "24 de marzo de 2025, a las 8,00, hora peninsular, hasta el 14 de mayo de 2025, a las 15,00, hora peninsular"
+            }
+        },
+        "eligible_programs": {
+            "university_programs": [
+                "Estudios de grado y máster",
+                "Complementos de formación para acceso u obtención del título de máster",
+                "Créditos complementarios para la obtención del título de grado",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años"
+            ],
+            "non_university_programs": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_amounts": {
+            "fixed_income": 1700.0,
+            "fixed_residence": 2700.0,
+            "excellence_range": {
+                "min": 50,
+                "max": 125
+            },
+            "basic_scholarship": 300.0,
+            "min_variable": 60.0
+        },
+        "academic_requirements": {
+            "minimum_gpa": 8.0,
+            "required_credits_percentage": 100
+        }
+    }
+]

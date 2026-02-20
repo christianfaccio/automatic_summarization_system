@@ -5,9 +5,15 @@ CORPUS_DIR = "docs"
 
 corpus = extractor.extract_text_from_pdfs(CORPUS_DIR)
 
-#print(corpus["ayudas_21-22.pdf"])
+all_scholarships = []
 
-first_doc_text = corpus["ayudas_21-22.pdf"]
-segmented_doc = extractor.segment_by_articles(first_doc_text)
-#print(segmented_doc.keys())
-print(segmented_doc["Artículo 1."])
+for filename, text in corpus.items():
+    segmented_doc = extractor.segment_by_articles(text) 
+    
+    scholarship_data = extractor.extract_full_corpus_data(segmented_doc, text)
+    
+    all_scholarships.append(scholarship_data)
+
+# Save the master "Ground Truth" file
+with open("output/scholarship_corpus.json", "w", encoding="utf-8") as f:
+    json.dump(all_scholarships, f, indent=4, ensure_ascii=False)
