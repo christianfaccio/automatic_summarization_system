@@ -30,7 +30,8 @@ class Extraction:
         return match.group(0) if match else None
     
     def get_deadlines(self):
-        return re.findall(r'\d{1,2}/\d{1,2}/\d{4}', self.text)
+        dates = re.findall(r'\d{1,2}/\d{1,2}/\d{4}', self.text)
+        return list(dict.fromkeys(dates))
     
     def get_amounts(self):
         return re.findall(r'\d{1,3}(?:\.\d{3})*,\d+\s?euros?', self.text, re.I)
@@ -44,23 +45,24 @@ class Extraction:
     
     def get_all(self):
         return {
-            "academic_year": self.extract_academic_year(),
-            "institution": self.extract_ministry(),
-            "title": self.extract_title(),
-            "deadlines": self.extract_deadlines(),
-            "amounts": self.extract_amounts()
+            "academic_year": self.get_academic_year(),
+            "institution": self.get_ministry(),
+            "title": self.get_title(),
+            "deadlines": self.get_deadlines(),
+            "amounts": self.get_amounts()
         }
     
-def process_pdfs(pdf_folder, output_json="output/scholarships.json"):
+def process_pdfs(pdf_folder, output_json="../output/scholarships.json"):
     data = []
     for filename in os.listdir(pdf_folder):
         if filename.endswith(".pdf"):
             extractor = Extraction(os.path.join(pdf_folder, filename))
-            data.append(extractor.extract_all())
+            data.append(extractor.get_all())
+
+    os.makedirs(os.path.dirname(output_json), exist_ok=True)
     with open(output_json, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     print(f"Data extracted to {output_json}")
 
-# Ejecutar directamente
 if __name__ == "__main__":
-    process_pdfs("docs")
+    process_pdfs("../docs")

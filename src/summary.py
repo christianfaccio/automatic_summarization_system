@@ -7,7 +7,7 @@ def generate_summary(json_file, output_file="output/summary.txt", model_name="fa
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Convertir JSON a texto plano para resumir
+    # Convert JSON to plain text
     text_for_summary = ""
     for item in data:
         text_for_summary += f"Academic Year: {item.get('academic_year', 'N/A')}. "
@@ -19,18 +19,18 @@ def generate_summary(json_file, output_file="output/summary.txt", model_name="fa
         text_for_summary += f"Scholarship Amounts: {amounts}. "
         text_for_summary += "\n"
 
-    # Generar resumen (dividir en chunks si el texto es muy largo)
-    max_chunk = 1024  # tokens aproximados
+    # Generate summary (divide in chunks if the text is long)
+    max_chunk = 1024  # approximate tokens
     summaries = []
     for i in range(0, len(text_for_summary), max_chunk):
         chunk = text_for_summary[i:i+max_chunk]
         summary = summarizer(chunk, max_length=200, min_length=80, do_sample=False)[0]['summary_text']
         summaries.append(summary)
 
-    # Combinar todos los chunks
+    # Combine chunks
     final_summary = " ".join(summaries)
 
-    # Guardar resumen
+    # Save summary
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(final_summary)
 
