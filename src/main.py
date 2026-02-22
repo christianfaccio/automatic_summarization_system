@@ -30,15 +30,18 @@ class Extraction:
         return match[0] if match else None
     
     def get_ministry(self):
-        match = re.search(r'MINISTERIO DE [A-Z ]+', self.text)
-        return match.group(0) if match else None
+        match = re.search(r'(MINISTERIO DE [A-ZÁÉÍÓÚÜÑ ]+)', self.text)
+        return match.group(1).strip() if match else None
     
     def get_deadlines(self):
         dates = re.findall(r'\d{1,2}/\d{1,2}/\d{4}', self.text)
         return list(dict.fromkeys(dates))
     
     def get_amounts(self):
-        return re.findall(r'\d{1,3}(?:\.\d{3})*,\d+\s?euros?', self.text, re.I)
+        pattern = r'(?:cuant[ií]a|beca|importe|ayuda|dotaci[oó]n).*?(\d{1,3}(?:\.\d{3})*,\d+\s?euros?)'
+        matches = re.findall(pattern, self.text, re.I)
+
+        return list(dict.fromkeys(matches))
     
     def get_title(self):
         match = re.search(
