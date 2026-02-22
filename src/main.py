@@ -1,3 +1,4 @@
+from datetime import datetime
 import pdfplumber
 import json
 import re
@@ -34,14 +35,65 @@ class Extraction:
         return match.group(1).strip() if match else None
     
     def get_deadlines(self):
-        dates = re.findall(r'\d{1,2}/\d{1,2}/\d{4}', self.text)
-        return list(dict.fromkeys(dates))
+        academic_year = self.get_academic_year()  
+        if not academic_year:
+            return []
+
+        start_year, end_year = map(int, academic_year.split('-'))
+        academic_start = datetime(start_year, 9, 1) 
+        academic_end   = datetime(end_year, 5, 31) 
+
+        date_patterns = [
+            r'\d{1,2}/\d{1,2}/\d{4}',
+            r'\d{1,2}-\d{1,2}-\d{4}',
+            r'\d{1,2} de [a-záéíóú]+ de \d{4}',
+        ]
+
+        all_dates = []
+        for pattern in date_patterns:
+            all_dates.extend(re.findall(pattern, self.text, re.I))
+
+        def parse_date(s):
+            try:
+                return datetime.strptime(s, "%d/%m/%Y")
+            except:
+                try:
+                    return datetime.strptime(s, "%d-%m-%Y")
+                except:
+                    months = {
+                        'enero':1,'febrero':2,'marzo':3,'abril':4,'mayo':5,'junio':6,
+                        'julio':7,'agosto':8,'septiembre':9,'octubre':10,'noviembre':11,'diciembre':12
+                    }
+                    m = re.match(r'(\d{1,2}) de ([a-záéíóú]+) de (\d{4})', s.lower())
+                    if m:
+                        day, month, year = int(m.group(1)), months[m.group(2)], int(m.group(3))
+                        return datetime(year, month, day)
+                return None
+
+        parsed_dates = [d for d in map(parse_date, all_dates) if d]
+
+        valid_dates = [d for d in parsed_dates if academic_start <= d <= academic_end]
+
+        if not valid_dates:
+            return []
+
+        valid_dates.sort()
+        start_date = valid_dates[0]
+        end_date   = valid_dates[-1]
+
+        return [(start_date.strftime("%d/%m/%Y"), end_date.strftime("%d/%m/%Y"))]
     
     def get_amounts(self):
         pattern = r'(?:cuant[ií]a|beca|importe|ayuda|dotaci[oó]n).*?(\d{1,3}(?:\.\d{3})*,\d+\s?euros?)'
         matches = re.findall(pattern, self.text, re.I)
 
-        return list(dict.fromkeys(matches))
+        cleaned = []
+        for m in matches:
+            num = float(m.replace('.', '').replace(',', '.').split()[0])
+            if 100 <= num <= 6000:  # typical range of scholarship
+                cleaned.append(m)
+
+        return list(dict.fromkeys(cleaned))
     
     def get_title(self):
         match = re.search(
