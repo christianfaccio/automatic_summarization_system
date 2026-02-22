@@ -1,8 +1,8 @@
 import json
 from transformers import pipeline
 
-def generate_summary(json_file, output_file="output/summary.txt", model_name="facebook/bart-large-cnn"):
-    summarizer = pipeline("summarization", model=model_name)
+def generate_summary(json_file, output_file="../output/summary.txt", model_name="facebook/bart-large-cnn"):
+    summarizer = pipeline("text-generation", model=model_name)
 
     with open(json_file, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -13,7 +13,17 @@ def generate_summary(json_file, output_file="output/summary.txt", model_name="fa
         text_for_summary += f"Academic Year: {item.get('academic_year', 'N/A')}. "
         text_for_summary += f"Institution: {item.get('institution', 'N/A')}. "
         text_for_summary += f"Title: {item.get('title', 'N/A')}. "
-        deadlines = ", ".join(item.get("deadlines", []))
+        
+        deadlines_list = item.get("deadlines", [])
+        deadlines_str = []
+        for d in deadlines_list:
+            if isinstance(d, tuple):
+                deadlines_str.append(f"{d[0]} - {d[1]}")
+            else:
+                deadlines_str.append(str(d))  # fallback por si es solo string
+
+        deadlines = ", ".join(deadlines_str)
+
         text_for_summary += f"Deadlines: {deadlines}. "
         amounts = ", ".join(item.get("amounts", []))
         text_for_summary += f"Scholarship Amounts: {amounts}. "
@@ -24,7 +34,12 @@ def generate_summary(json_file, output_file="output/summary.txt", model_name="fa
     summaries = []
     for i in range(0, len(text_for_summary), max_chunk):
         chunk = text_for_summary[i:i+max_chunk]
-        summary = summarizer(chunk, max_length=200, min_length=80, do_sample=False)[0]['summary_text']
+        summary = summarizer(
+            chunk,
+            max_length=200,
+            min_length=80,
+            do_sample=False
+        )[0]['generated_text']
         summaries.append(summary)
 
     # Combine chunks
@@ -35,4 +50,4 @@ def generate_summary(json_file, output_file="output/summary.txt", model_name="fa
         f.write(final_summary)
 
 if __name__ == "__main__":
-    generate_summary("output/scholarships.json")
+    generate_summary("../output/scholarships.json")
