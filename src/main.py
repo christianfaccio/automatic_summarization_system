@@ -11,7 +11,11 @@ class Extraction:
     def clean_text(self, text):
         text = text.replace("\n", " ")
         text = re.sub(r'\s+', ' ', text)
-        text = re.sub(r'(\w+)- (\w+)', r'\1\2', text)  # join separate words
+        text = re.sub(r'(\w+)- (\w+)', r'\1\2', text)
+        text = re.sub(r'https?://\S+', '', text)
+        text = re.sub(r'[A-Z0-9\-]{20,}', '', text)
+        text = re.sub(r'\S*//:sptth\S*', '', text)
+
         return text.strip()
 
     def get_text(self):
@@ -37,11 +41,12 @@ class Extraction:
         return re.findall(r'\d{1,3}(?:\.\d{3})*,\d+\s?euros?', self.text, re.I)
     
     def get_title(self):
-        lines = self.text.split('. ')
-        for line in lines:
-            if "RESOLUCIÓN" in line.upper():
-                return line
-        return None
+        match = re.search(
+            r'(RESOLUCIÓN.*?CURSO ACADÉMICO \d{4}-\d{4}.*?)\.',
+            self.text,
+            re.I
+        )
+        return match.group(1).strip() if match else None
     
     def get_all(self):
         return {
