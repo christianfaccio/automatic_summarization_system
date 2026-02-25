@@ -2,7 +2,13 @@ import fitz  #PyMuPDF
 import re
 import os
 import json
+import argparse
+import torch
 from openai import OpenAI
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+LOCAL_MODEL_ID = "Qwen/Qwen2.5-3B-Instruct"
+CLOUD_MODEL_ID = "mistralai/mistral-small-3.2-24b-instruct"
 
 def extract_text_from_pdfs(docs_folder):
     corpus_text = {}
@@ -18,47 +24,56 @@ def extract_text_from_pdfs(docs_folder):
                 page_rect = page.rect
                 page_height = page_rect.height
                 page_width = page_rect.width
-                
+
                 # Compute margins
                 header_margin_percent, footer_margin_percent = 5, 10
                 left_margin_percent, right_margin_percent = 10, 10
-    
+
                 header_margin = page_height * (header_margin_percent / 100)
                 footer_margin = page_height * (footer_margin_percent / 100)
                 left_margin = page_width * (left_margin_percent / 100)
                 right_margin = page_width * (right_margin_percent / 100)
-                
+
                 # Create rectangle in which the important content is (no header, footer, left and right margins)
                 content_rect = fitz.Rect(left_margin, header_margin, page_width - right_margin, page_height - footer_margin)
-            
+
                 text = page.get_text("text", clip=content_rect)
-                
+
                 # Cleaning: Remove the common BOE footer pattern (CSV validation codes)
                 lines = [line for line in text.split('\n') if "CSV :" not in line and "DIRECCIÓN DE VALIDACIÓN" not in line]
                 full_text.append("\n".join(lines))
-            
+
             corpus_text[filename] = "\n".join(full_text)
             print(f"Finished extracting text from: {filename}")
-            
+
     return corpus_text
 
 
 def segment_by_articles(text):
     # Find "Artículo 1.", "Artículo 2.", etc. We divide the text by articles
     pattern = r'(Artículo\s+\d+\.)'
-    
+
     # Split the text by the pattern
     parts = re.split(pattern, text)
-    
+
     articles_dict = {}
     # Iterate through the split parts (skip first part because is the header)
     for i in range(1, len(parts), 2):
         article_title = parts[i].strip()
         article_content = parts[i+1].strip()
         articles_dict[article_title] = article_content
-        
+
     return articles_dict
 
+
+def load_local_model():
+    tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_ID)
+    model = AutoModelForCausalLM.from_pretrained(
+        LOCAL_MODEL_ID,
+        torch_dtype=torch.float16,
+        device_map="auto",
+    )
+    return model, tokenizer
 
 
 # Configuration of prompts and targets
@@ -85,26 +100,48 @@ EXTRACTION_TASKS = {
     }
 }
 
-def call_llm_for_json(prompt, context):
+def call_llm_for_json(prompt, context, model=None, tokenizer=None):
     """Sends the context and prompt to the LLM and parses JSON response."""
     system_msg = "You are a legal data extractor, specialized in Spanish documents about scholarships. Output ONLY raw JSON."
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key="api_key", # Replace with the actual API KEY 
-    )
-
     full_prompt = f"TEXTO DEL DOCUMENTO: \n{context}\n\nINSTRUCCIÓN:\n{prompt}"
 
-    completion = client.chat.completions.create(
-        model="mistralai/mistral-small-3.2-24b-instruct", 
-        messages=[
+    if model is not None:
+        # Local inference via transformers
+        messages = [
             {"role": "system", "content": system_msg},
-            {"role": "user", "content": full_prompt}
-        ],
-        response_format={ "type": "json_object" }
-    )
+            {"role": "user", "content": full_prompt},
+        ]
+        input_ids = tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+            return_tensors="pt",
+        ).to(model.device)
 
-    content = completion.choices[0].message.content
+        output_ids = model.generate(
+            input_ids,
+            max_new_tokens=512,
+            do_sample=False,
+        )
+        # Decode only the newly generated tokens
+        new_tokens = output_ids[0][input_ids.shape[-1]:]
+        content = tokenizer.decode(new_tokens, skip_special_tokens=True)
+    else:
+        # Cloud inference via OpenRouter
+        client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key="api_key", # Replace with the actual API KEY
+        )
+
+        completion = client.chat.completions.create(
+            model=CLOUD_MODEL_ID,
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": full_prompt}
+            ],
+            response_format={ "type": "json_object" }
+        )
+        content = completion.choices[0].message.content
+
     content = content.replace("```json", "").replace("```", "").strip()
 
     try:
@@ -113,17 +150,17 @@ def call_llm_for_json(prompt, context):
         print(f"Error decodificando JSON. El modelo respondió: {content}")
         return {}
 
-def extract_full_corpus_data(segmented_doc, raw_text):
+def extract_full_corpus_data(segmented_doc, raw_text, model=None, tokenizer=None):
     final_json = {}
-    
+
     for section, task in EXTRACTION_TASKS.items():
         # Determine context: specific article or the whole header
         context = raw_text[:2000] if section == "General" else segmented_doc.get(section, "")
 
         if context:
             print(f"Processing {section}...")
-            extracted_part = call_llm_for_json(task["prompt"], context)
-            
+            extracted_part = call_llm_for_json(task["prompt"], context, model=model, tokenizer=tokenizer)
+
             # Merge into the final document structure
             key = task.get("key", "general_info")
 
@@ -132,10 +169,20 @@ def extract_full_corpus_data(segmented_doc, raw_text):
                 final_json[key].update(extracted_part)
             else:
                 final_json[key] = extracted_part
-            
+
     return final_json
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--use-cloud', action='store_true',
+                        help='Use mistral-small-3.2-24b via OpenRouter instead of local Qwen2.5-3B')
+    args = parser.parse_args()
+
+    if args.use_cloud:
+        model, tokenizer = None, None
+    else:
+        model, tokenizer = load_local_model()
+
     CORPUS_DIR = "../docs"
 
     corpus = extract_text_from_pdfs(CORPUS_DIR)
@@ -143,12 +190,12 @@ if __name__ == "__main__":
     all_scholarships = []
 
     for filename, text in corpus.items():
-        segmented_doc = segment_by_articles(text) 
-        
+        segmented_doc = segment_by_articles(text)
+
         print(f"Processing file {filename}...")
-        scholarship_data = extract_full_corpus_data(segmented_doc, text)
+        scholarship_data = extract_full_corpus_data(segmented_doc, text, model=model, tokenizer=tokenizer)
         print(f"Finished processing file {filename}")
-        
+
         all_scholarships.append(scholarship_data)
 
     # Save the master "Ground Truth" file

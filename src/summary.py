@@ -13,9 +13,9 @@ INPUT_FILE = args.input_file
 OUTPUT_DIR = Path("../output/generated_summaries")
 
 MODELS = {
-    "phi3": "microsoft/Phi-3-mini-4k-instruct",
-    "mistral": "mistralai/Mistral-7B-Instruct-v0.2",
-    "openllama3b": "openlm-research/open_llama_3b",
+    "phi35":   "microsoft/Phi-3.5-mini-instruct",
+    "llama32": "meta-llama/Llama-3.2-3B-Instruct",
+    "qwen25":  "Qwen/Qwen2.5-3B-Instruct",
 }
 
 GENERATION_PARAMS = {
