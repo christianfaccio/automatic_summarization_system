@@ -8,6 +8,9 @@
 \usepackage{lettrine}
 \usepackage{subcaption}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
 
 \addbibresource{references.bib} % BibLaTeX bibliography file
 
@@ -80,6 +83,32 @@ Finally, the extracted information has been written on a JSON file in a structur
 \section{Architecture}
 
 We divided the whole architecture in two components: the \textit{information retrieval (IR)} part and the \textit{generation} part.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+node distance=1.8cm,
+box/.style={rectangle, draw, rounded corners, align=center, minimum width=4cm, minimum height=1cm}
+]
+
+\node[box] (pdf) {PDF Documents (BOE)};
+\node[box, below of=pdf] (extract) {PDF Text Extraction \\ (pdfplumber)};
+\node[box, below of=extract] (clean) {Text Preprocessing \\ Cleaning + Normalization};
+\node[box, below of=clean] (ir) {Information Extraction \\ Regex + Rules};
+\node[box, below of=ir] (json) {Structured Output \\ JSON File};
+\node[box, below of=json] (gen) {Text Generation Model \\ HuggingFace Pipeline};
+\node[box, below of=gen] (out) {Final Summary};
+
+\draw[->] (pdf) -- (extract);
+\draw[->] (extract) -- (clean);
+\draw[->] (clean) -- (ir);
+\draw[->] (ir) -- (json);
+\draw[->] (json) -- (gen);
+\draw[->] (gen) -- (out);
+
+\end{tikzpicture}
+\caption{System Architecture}
+\end{figure}
 
 \subsection{Information Retrieval}
 
