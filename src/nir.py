@@ -44,14 +44,12 @@ def extract_text_from_pdfs(docs_folder):
 
 
 def segment_by_articles(text):
-    # Find "Artículo 1.", "Artículo 2.", etc. We divide the text by articles
+    # Divide the text by articles
     pattern = r'(Artículo\s+\d+\.)'
-    
-    # Split the text by the pattern
     parts = re.split(pattern, text)
-    
     articles_dict = {}
-    # Iterate through the split parts (skip first part because is the header)
+
+    # Iterate through the split parts (skip first part because it is the header)
     for i in range(1, len(parts), 2):
         article_title = parts[i].strip()
         article_content = parts[i+1].strip()
