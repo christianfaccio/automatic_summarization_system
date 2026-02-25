@@ -33,7 +33,7 @@ def extract_text_from_pdfs(docs_folder):
             
                 text = page.get_text("text", clip=content_rect)
                 
-                # Cleaning: Remove the common BOE footer pattern (CSV validation codes)
+                # Remove the footer pattern in case it was missed
                 lines = [line for line in text.split('\n') if "CSV :" not in line and "DIRECCIÓN DE VALIDACIÓN" not in line]
                 full_text.append("\n".join(lines))
             
@@ -49,8 +49,7 @@ def segment_by_articles(text):
     parts = re.split(pattern, text)
     articles_dict = {}
 
-    # Iterate through the split parts (skip first part because it is the header)
-    for i in range(1, len(parts), 2):
+    for i in range(1, len(parts), 2):    # Skip first part because it is the header
         article_title = parts[i].strip()
         article_content = parts[i+1].strip()
         articles_dict[article_title] = article_content
@@ -115,7 +114,7 @@ def extract_full_corpus_data(segmented_doc, raw_text):
     final_json = {}
     
     for section, task in EXTRACTION_TASKS.items():
-        # Determine context: specific article or the whole header
+        # Determine context -> specific article or the whole header
         context = raw_text[:2000] if section == "General" else segmented_doc.get(section, "")
 
         if context:
