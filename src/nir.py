@@ -5,10 +5,11 @@ import json
 import argparse
 import torch
 from openai import OpenAI
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoModelForSequenceClassification, AutoTokenizer
 
-LOCAL_MODEL_ID = "Qwen/Qwen2.5-3B-Instruct"
-CLOUD_MODEL_ID = "mistralai/mistral-small-3.2-24b-instruct"
+LOCAL_MODEL_ID       = "Qwen/Qwen2.5-3B-Instruct"
+CLOUD_MODEL_ID       = "mistralai/mistral-small-3.2-24b-instruct"
+HALLUCINATION_MODEL_ID = "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
 def extract_text_from_pdfs(docs_folder):
     corpus_text = {}
@@ -76,28 +77,92 @@ def load_local_model():
     return model, tokenizer
 
 
-# Configuration of prompts and targets
+def load_hallucination_model():
+    """Load the multilingual NLI model used to score factual consistency."""
+    tokenizer = AutoTokenizer.from_pretrained(HALLUCINATION_MODEL_ID)
+    model = AutoModelForSequenceClassification.from_pretrained(HALLUCINATION_MODEL_ID)
+    model.eval()
+    return model, tokenizer
+
+
+def score_factual_consistency(
+    premise: str,
+    hypothesis: str,
+    halu_model,
+    halu_tokenizer,
+) -> float:
+    """Return entailment probability: 1.0 = fully supported, 0.0 = hallucinated."""
+    inputs = halu_tokenizer(
+        premise,
+        hypothesis,
+        return_tensors="pt",
+        truncation=True,
+        max_length=512,
+    )
+    with torch.no_grad():
+        logits = halu_model(**inputs).logits
+    probs = torch.softmax(logits, dim=-1)[0]
+    label2id = {v: k for k, v in halu_model.config.id2label.items()}
+    return probs[label2id["entailment"]].item()
+
+
+# Configuration of prompts and targets.
+# key=None means the extracted fields are merged at the top level of the document dict.
+# All keys and sub-keys mirror ir.py's output schema so summary.py can use either file.
 EXTRACTION_TASKS = {
     "General": {
-        "source": "general_info",
-        "prompt": "Identify the academic year (e.g., 2024-2025). Return JSON: {academic_year: str}."
-    },
-    "Artículo 48.": {
-        "source": "general_info",
-        "prompt": "Identify the deadlines with DD/MM/YYYY format. Only if the deadline includes a starting date, the format should be DD/MM/YYYY - DD/MM/YYYY. Return JSON: {deadlines: {university: str, non_university: str, exception: str}}."
+        "key": None,  # top-level merge
+        "prompt": (
+            "From this Spanish scholarship regulation preamble extract three things:\n"
+            "1. The academic year (e.g. '2024-2025').\n"
+            "2. The total budget in millions of euros as a plain number (no units).\n"
+            "3. The full 'Real Decreto' reference string that defines income thresholds.\n"
+            "Return JSON: {\"academic_year\": str, "
+            "\"total_budget_general_millions_eur\": number, "
+            "\"income_thresholds_defined_by\": str}."
+        ),
     },
     "Artículo 3.": {
         "key": "eligible_programs",
-        "prompt": "Extract educational levels. Group into JSON: {university_programs: [str, str...], non_university_programs: [str, str..]}."
+        "prompt": (
+            "Extract the educational programs eligible for scholarships.\n"
+            "Return JSON: {\"university\": [str, ...], \"non_university\": [str, ...]}."
+        ),
     },
     "Artículo 11.": {
-        "key": "scholarship_amounts",
-        "prompt": "Extract fixed/variable amounts. JSON keys: fixed_income, fixed_residence, fixed_excellence_range (dict with gpas as keys), basic_scholarship (dict with general and basic_cycle as keys), min_variable."
+        "key": "scholarship_components",
+        "prompt": (
+            "Extract scholarship component amounts present in the text.\n"
+            "Return JSON with only the keys that appear: "
+            "tuition (str, e.g. 'covered_by_public_fees'), "
+            "fixed_income_eur (int), residency_eur (int), "
+            "fixed_excellence_by_gpa (object mapping GPA-range strings to euro int amounts), "
+            "basic_grant_eur (int), basic_grant_basic_cycle_eur (int), variable_min_eur (int)."
+        ),
     },
-    "Artículo 19.":{
+    "Artículo 19.": {
         "key": "income_thresholds",
-        "prompt": "Extract income thresholds by threshold number and by number of family members. JSON keys: umbral_1, umbral_2, umbral_3. Values for each key will be Python dictionaries with the number of family members as keys (final key will be additional_member) and the total income as values."
-    }
+        "prompt": (
+            "Extract income thresholds by threshold number and number of family members.\n"
+            "Return JSON: {\"umbral_1\": {\"1\": int, ..., \"additional_member\": int}, "
+            "\"umbral_2\": {...}, \"umbral_3\": {...}}."
+        ),
+    },
+    "Artículo 23.": {
+        "key": "academic_requirements",
+        "prompt": (
+            "Extract minimum academic requirements for scholarship eligibility.\n"
+            "Return JSON: {\"university_min_credits\": int, \"min_gpa\": float}."
+        ),
+    },
+    "Artículo 48.": {
+        "key": "application_period",
+        "prompt": (
+            "Extract the application period dates.\n"
+            "Return JSON: {\"start\": str, \"end\": str, \"exception_until\": str} "
+            "using natural-language dates (e.g. '14 de junio de 2023'). Omit missing keys."
+        ),
+    },
 }
 
 def call_llm_for_json(prompt, context, model=None, tokenizer=None):
@@ -150,25 +215,37 @@ def call_llm_for_json(prompt, context, model=None, tokenizer=None):
         print(f"Error decodificando JSON. El modelo respondió: {content}")
         return {}
 
-def extract_full_corpus_data(segmented_doc, raw_text, model=None, tokenizer=None):
+def extract_full_corpus_data(segmented_doc, raw_text, model=None, tokenizer=None, halu_model=None, halu_tokenizer=None):
     final_json = {}
+    hallucination_scores = {}
 
     for section, task in EXTRACTION_TASKS.items():
-        # Determine context: specific article or the whole header
-        context = raw_text[:2000] if section == "General" else segmented_doc.get(section, "")
+        # General uses the document preamble; everything else uses its specific article
+        context = raw_text[:5000] if section == "General" else segmented_doc.get(section, "")
 
-        if context:
-            print(f"Processing {section}...")
-            extracted_part = call_llm_for_json(task["prompt"], context, model=model, tokenizer=tokenizer)
+        if not context:
+            continue
 
-            # Merge into the final document structure
-            key = task.get("key", "general_info")
+        print(f"Processing {section}...")
+        extracted_part = call_llm_for_json(task["prompt"], context, model=model, tokenizer=tokenizer)
 
-            # If the key already exists, update it (academic years and deadlines are in the same key)
-            if key in final_json and isinstance(final_json[key], dict):
-                final_json[key].update(extracted_part)
-            else:
-                final_json[key] = extracted_part
+        if halu_model is not None and extracted_part:
+            hypothesis = json.dumps(extracted_part, ensure_ascii=False)
+            score = score_factual_consistency(context, hypothesis, halu_model, halu_tokenizer)
+            hallucination_scores[section] = round(score, 4)
+            print(f"    Hallucination score: {score:.4f}")
+
+        key = task.get("key")
+        if key is None:
+            # Merge all fields at the top level (used for General section)
+            final_json.update(extracted_part)
+        elif key in final_json and isinstance(final_json[key], dict):
+            final_json[key].update(extracted_part)
+        else:
+            final_json[key] = extracted_part
+
+    if hallucination_scores:
+        final_json["hallucination_scores"] = hallucination_scores
 
     return final_json
 
@@ -183,6 +260,9 @@ if __name__ == "__main__":
     else:
         model, tokenizer = load_local_model()
 
+    print("Loading hallucination evaluation model...")
+    halu_model, halu_tokenizer = load_hallucination_model()
+
     CORPUS_DIR = "../docs"
 
     corpus = extract_text_from_pdfs(CORPUS_DIR)
@@ -193,7 +273,11 @@ if __name__ == "__main__":
         segmented_doc = segment_by_articles(text)
 
         print(f"Processing file {filename}...")
-        scholarship_data = extract_full_corpus_data(segmented_doc, text, model=model, tokenizer=tokenizer)
+        scholarship_data = extract_full_corpus_data(
+            segmented_doc, text,
+            model=model, tokenizer=tokenizer,
+            halu_model=halu_model, halu_tokenizer=halu_tokenizer,
+        )
         print(f"Finished processing file {filename}")
 
         all_scholarships.append(scholarship_data)
