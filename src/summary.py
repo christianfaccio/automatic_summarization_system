@@ -6,7 +6,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoModelForSequenceClassification, AutoTokenizer
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_file', type=str, default='../output/info_mistral.json')
+parser.add_argument('--input_file', type=str, default='../output/info_llm.json')
 args = parser.parse_args()
 
 INPUT_FILE = args.input_file
@@ -14,7 +14,7 @@ OUTPUT_DIR = Path("../output/generated_summaries")
 
 MODELS = {
     "phi35":   "microsoft/Phi-3.5-mini-instruct",
-    "llama32": "meta-llama/Llama-3.2-3B-Instruct",
+    "smollm2": "HuggingFaceTB/SmolLM2-1.7B-Instruct",
     "qwen25":  "Qwen/Qwen2.5-3B-Instruct",
 }
 
@@ -44,24 +44,24 @@ def build_prompt(year_data: dict) -> str:
         "SUMMARY:\n"
     )
 
-def generate_summary(
-    model: AutoModelForCausalLM,
-    tokenizer: AutoTokenizer,
-    prompt: str,
-) -> str:
+def generate_summary(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, prompt: str) -> str:
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    outputs = model.generate(**inputs, **GENERATION_PARAMS)
+    outputs = model.generate(
+        **inputs,
+        **GENERATION_PARAMS,
+        pad_token_id=tokenizer.eos_token_id,
+    )
     decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return decoded.split("SUMMARY:")[-1].strip()
 
 def load_model(model_id: str):
-    """Load a causal-LM model and its tokenizer in float16 with auto device mapping."""
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     model = AutoModelForCausalLM.from_pretrained(
         model_id,
-        torch_dtype=torch.float16,
-        device_map="auto",
-    )
+        dtype=torch.float16,
+    ).to(device)
+    model.eval()
     return model, tokenizer
 
 
@@ -73,20 +73,13 @@ def unload_model(*objects) -> None:
 
 
 def load_hallucination_model():
-    """Load the multilingual NLI model used to score factual consistency."""
     tokenizer = AutoTokenizer.from_pretrained(HALLUCINATION_MODEL_ID)
     model = AutoModelForSequenceClassification.from_pretrained(HALLUCINATION_MODEL_ID)
     model.eval()
     return model, tokenizer
 
 
-def score_factual_consistency(
-    premise: str,
-    hypothesis: str,
-    halu_model: AutoModelForSequenceClassification,
-    halu_tokenizer: AutoTokenizer,
-) -> float:
-    """Return entailment probability: 1.0 = fully supported, 0.0 = hallucinated."""
+def score_factual_consistency(premise: str, hypothesis: str, halu_model: AutoModelForSequenceClassification, halu_tokenizer: AutoTokenizer) -> float:
     inputs = halu_tokenizer(
         premise,
         hypothesis,
@@ -100,14 +93,7 @@ def score_factual_consistency(
     label2id = {v: k for k, v in halu_model.config.id2label.items()}
     return probs[label2id["entailment"]].item()
 
-def run_pipeline_for_model(
-    model_tag: str,
-    model_id: str,
-    data: dict,
-    halu_model=None,
-    halu_tokenizer=None,
-) -> dict:
-    """Load a model, generate summaries for every year, save them, and release GPU memory."""
+def run_pipeline_for_model(model_tag: str, model_id: str, data: dict, halu_model=None, halu_tokenizer=None) -> dict:
     print(f"\n{'='*60}")
     print(f"Loading model: {model_id}")
     print(f"{'='*60}")
@@ -122,7 +108,6 @@ def run_pipeline_for_model(
         summary = generate_summary(model, tokenizer, prompt)
         summaries[year_name] = summary
 
-        # Save each summary immediately to avoid data loss
         output_path = OUTPUT_DIR / f"{year_name}_{model_tag}.txt"
         output_path.write_text(summary, encoding="utf-8")
 
@@ -162,7 +147,6 @@ if __name__ == "__main__":
     else:
         data = raw
 
-    print("Loading hallucination evaluation model...")
     halu_model, halu_tokenizer = load_hallucination_model()
 
     # Run each model sequentially (one at a time to fit in GPU memory)
@@ -171,5 +155,3 @@ if __name__ == "__main__":
         all_summaries[model_tag] = run_pipeline_for_model(
             model_tag, model_id, data, halu_model, halu_tokenizer
         )
-
-    print("\n   All models processed successfully.")

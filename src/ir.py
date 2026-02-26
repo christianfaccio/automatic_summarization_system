@@ -254,9 +254,6 @@ def retrieve(bm25, query, k=2):
     bm25.k = k
     return '\n\n'.join(d.page_content for d in bm25.invoke(query))
 
-
-# -- Main pipeline --
-
 if __name__ == "__main__":
     loader = PyPDFDirectoryLoader(docs_path)
     raw_docs = loader.load()
@@ -302,5 +299,5 @@ if __name__ == "__main__":
 
         output[source] = data
 
-    with open(output_path + 'info.json', 'w', encoding='utf-8') as f:
+    with open(output_path + 'info_regex.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)

@@ -1,0 +1,443 @@
+[
+    {
+        "academic_year": "2023-2024",
+        "total_budget_general_millions_eur": 2520,
+        "income_thresholds_defined_by": "Real Decreto 117/2023, de 21 de febrero",
+        "eligible_programs": {
+            "university": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster e créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_components": {
+            "tuition": "covered_by_public_fees",
+            "fixed_income_eur": 1700,
+            "residency_eur": 2500,
+            "fixed_excellence_by_gpa": {
+                "8,00 y 8,49 puntos": 50,
+                "8,50 y 8,99 puntos": 75,
+                "9,00 y 9,49 puntos": 100,
+                "9,50 puntos o más": 125
+            },
+            "basic_grant_eur": 300,
+            "basic_grant_basic_cycle_eur": 350,
+            "variable_min_eur": 60
+        },
+        "income_thresholds": {
+            "umbral_1": {
+                "1": 8422,
+                "2": 12632,
+                "3": 16843,
+                "4": 21054,
+                "5": 24423,
+                "6": 27791,
+                "7": 31160,
+                "8": 34529,
+                "additional_member": 3368
+            },
+            "umbral_2": {
+                "1": 13236,
+                "2": 22594,
+                "3": 30668,
+                "4": 36421,
+                "5": 40708,
+                "6": 43945,
+                "7": 47146,
+                "8": 50333,
+                "additional_member": 3181
+            },
+            "umbral_3": {
+                "1": 14112,
+                "2": 24089,
+                "3": 32697,
+                "4": 38831,
+                "5": 43402,
+                "6": 46853,
+                "7": 50267,
+                "8": 53665,
+                "additional_member": 3391
+            }
+        },
+        "academic_requirements": {
+            "university_min_credits": 60,
+            "min_gpa": 0.0
+        },
+        "application_period": {
+            "start": "27 de marzo de 2023",
+            "end": "17 de mayo de 2023",
+            "exception_until": "31 de diciembre de 2023"
+        },
+        "hallucination_scores": {
+            "General": 0.1731,
+            "Artículo 3.": 0.6323,
+            "Artículo 11.": 0.1233,
+            "Artículo 19.": 0.0742,
+            "Artículo 23.": 0.0059,
+            "Artículo 48.": 0.0702
+        }
+    },
+    {
+        "academic_year": "2021-2022",
+        "total_budget_general_millions_eur": 2038.13,
+        "income_thresholds_defined_by": "Real Decreto 471/2021, de 29 de junio",
+        "eligible_programs": {
+            "university": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años",
+                "Complementos de formación para acceso u obtención del título de máster e créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titulación de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_components": {
+            "tuition": "covered_by_public_fees",
+            "fixed_income_eur": 1700,
+            "residency_eur": 1600,
+            "fixed_excellence_by_gpa": {
+                "Between 8.00 and 8.49 points": 50,
+                "Between 8.50 and 8.99 points": 75,
+                "Between 9.00 and 9.49 points": 100,
+                "9.50 points or more": 125
+            },
+            "basic_grant_eur": 300,
+            "basic_grant_basic_cycle_eur": 350,
+            "variable_min_eur": 60
+        },
+        "income_thresholds": {
+            "umbral_1": {
+                "1": 8422,
+                "2": 12632,
+                "3": 16843,
+                "4": 21054,
+                "5": 24423,
+                "6": 27791,
+                "7": 31160,
+                "8": 34529,
+                "additional_member": 3368
+            },
+            "umbral_2": {
+                "1": 13236,
+                "2": 22594,
+                "3": 30668,
+                "4": 36421,
+                "5": 40708,
+                "6": 43945,
+                "7": 47146,
+                "8": 50333,
+                "additional_member": 3181
+            },
+            "umbral_3": {
+                "1": 14112,
+                "2": 24089,
+                "3": 32697,
+                "4": 38831,
+                "5": 43402,
+                "6": 46853,
+                "7": 50267,
+                "8": 53665,
+                "additional_member": 3391
+            }
+        },
+        "academic_requirements": {
+            "university_min_credits": 60,
+            "min_gpa": 0.0
+        },
+        "application_period": {
+            "start": "14 de octubre de 2021",
+            "end": "30 de septiembre de 2021",
+            "exception_until": "31 de diciembre de 2021"
+        },
+        "hallucination_scores": {
+            "General": 0.1392,
+            "Artículo 3.": 0.5122,
+            "Artículo 11.": 0.0406,
+            "Artículo 19.": 0.0154,
+            "Artículo 23.": 0.0068,
+            "Artículo 48.": 0.1177
+        }
+    },
+    {
+        "academic_year": "2025-2026",
+        "total_budget_general_millions_eur": 12345,
+        "income_thresholds_defined_by": "Real Decreto 1721/2007, de 21 de diciembre",
+        "eligible_programs": {
+            "university": [
+                "Enseñanzas artísticas superiores",
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster"
+            ],
+            "non_university": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titulación de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional",
+                "Cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_components": {
+            "tuition": "covered_by_public_fees",
+            "fixed_income_eur": 1700,
+            "residency_eur": 2700,
+            "fixed_excellence_by_gpa": {
+                "Between 8,00 and 8,49 points": 50,
+                "Between 8,50 and 8,99 points": 75,
+                "Between 9,00 and 9,49 points": 100,
+                "9,50 points or more": 125
+            },
+            "basic_grant_eur": 300,
+            "basic_grant_basic_cycle_eur": 350,
+            "variable_min_eur": 60
+        },
+        "income_thresholds": {
+            "umbral_1": {
+                "1": 8843,
+                "2": 13264,
+                "3": 17685,
+                "4": 22107,
+                "5": 25644,
+                "6": 29181,
+                "7": 32718,
+                "8": 36255,
+                "additional_member": 3536
+            },
+            "umbral_2": {
+                "1": 13898,
+                "2": 23724,
+                "3": 32201,
+                "4": 38242,
+                "5": 42743,
+                "6": 46142,
+                "7": 49503,
+                "8": 52850,
+                "additional_member": 3340
+            },
+            "umbral_3": {
+                "1": 14818,
+                "2": 25293,
+                "3": 34332,
+                "4": 40773,
+                "5": 45572,
+                "6": 49196,
+                "7": 52780,
+                "8": 56348,
+                "additional_member": 3561
+            }
+        },
+        "academic_requirements": {
+            "university_min_credits": 60,
+            "min_gpa": 0.0
+        },
+        "application_period": {
+            "start": "24 de marzo de 2025",
+            "end": "14 de mayo de 2025",
+            "exception_until": "31 de diciembre de 2025"
+        },
+        "hallucination_scores": {
+            "General": 0.0193,
+            "Artículo 3.": 0.3374,
+            "Artículo 11.": 0.1066,
+            "Artículo 19.": 0.1653,
+            "Artículo 23.": 0.0064,
+            "Artículo 48.": 0.0801
+        }
+    },
+    {
+        "academic_year": "2022-2023",
+        "total_budget_general_millions_eur": 2134.29,
+        "income_thresholds_defined_by": "Real Decreto 154/2022, de 22 de febrero, por el que se establecen los umbrales de renta y patrimonio familiar y las cuantías de las becas y ayudas al estudio del Ministerio de Educación y Formación Profesional para el curso 2022-2023 y se modifica parcialmente el Real Decreto 1721/2007, de 21 de diciembre",
+        "eligible_programs": {
+            "university": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster e créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university": [
+                "Primer y segundo cursos de bachillerato",
+                "Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional y cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior impartidos en centros públicos y en centros privados concertados que tengan autorizadas enseñanzas de formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_components": {
+            "tuition": "covered_by_public_fees",
+            "fixed_income_eur": 1700,
+            "residency_eur": 1600,
+            "fixed_excellence_by_gpa": {
+                "8,00 y 8,49 puntos": 50,
+                "8,50 y 8,99 puntos": 75,
+                "9,00 y 9,49 puntos": 100,
+                "9,50 puntos o más": 125
+            },
+            "basic_grant_eur": 300,
+            "basic_grant_basic_cycle_eur": 350,
+            "variable_min_eur": 60
+        },
+        "income_thresholds": {
+            "umbral_1": {
+                "1": 8422,
+                "2": 12632,
+                "3": 16843,
+                "4": 21054,
+                "5": 24423,
+                "6": 27791,
+                "7": 31160,
+                "8": 34529,
+                "additional_member": 3368
+            },
+            "umbral_2": {
+                "1": 13236,
+                "2": 22594,
+                "3": 30668,
+                "4": 36421,
+                "5": 40708,
+                "6": 43945,
+                "7": 47146,
+                "8": 50333,
+                "additional_member": 3181
+            },
+            "umbral_3": {
+                "1": 14112,
+                "2": 24089,
+                "3": 32697,
+                "4": 38831,
+                "5": 43402,
+                "6": 46853,
+                "7": 50267,
+                "8": 53665,
+                "additional_member": 3391
+            }
+        },
+        "academic_requirements": {
+            "university_min_credits": 60,
+            "min_gpa": 0.0
+        },
+        "application_period": {
+            "start": "30 de marzo de 2022",
+            "end": "12 de mayo de 2022",
+            "exception_until": "31 de diciembre de 2022"
+        },
+        "hallucination_scores": {
+            "General": 0.214,
+            "Artículo 3.": 0.3691,
+            "Artículo 11.": 0.0947,
+            "Artículo 19.": 0.0137,
+            "Artículo 23.": 0.0052,
+            "Artículo 48.": 0.137
+        }
+    },
+    {
+        "academic_year": "2024-2025",
+        "total_budget_general_millions_eur": 2536,
+        "income_thresholds_defined_by": "Real Decreto 201/2024, de 27 de febrero",
+        "eligible_programs": {
+            "university": [
+                "Enseñanzas universitarias conducentes a títulos oficiales de grado y de máster",
+                "Curso de preparación para acceso a la universidad de mayores de 25 años impartido por universidades públicas",
+                "Complementos de formación para acceso u obtención del título de máster e créditos complementarios para la obtención del título de grado"
+            ],
+            "non_university": [
+                "Primer y segundo cursos de bachillerato",
+                "Ciclos de Formación Profesional de grado medio y de grado superior",
+                "Enseñanzas artísticas profesionales",
+                "Enseñanzas deportivas",
+                "Enseñanzas artísticas superiores",
+                "Estudios religiosos superiores",
+                "Estudios de idiomas realizados en escuelas oficiales de titularidad de las administraciones educativas",
+                "Cursos de acceso y cursos de preparación para las pruebas de acceso a la formación profesional y cursos de formación específicos para el acceso a los ciclos formativos de grado medio y de grado superior impartidos en centros públicos y en centros privados concertados que tengan autorizadas enseñanzas de formación profesional",
+                "Ciclos Formativos de Grado Básico"
+            ]
+        },
+        "scholarship_components": {
+            "tuition": "covered_by_public_fees",
+            "fixed_income_eur": 1700,
+            "residency_eur": 2500,
+            "fixed_excellence_by_gpa": {
+                "8,00 y 8,49 puntos": 50,
+                "8,50 y 8,99 puntos": 75,
+                "9,00 y 9,49 puntos": 100,
+                "9,50 puntos o más": 125
+            },
+            "basic_grant_eur": 300,
+            "basic_grant_basic_cycle_eur": 350,
+            "variable_min_eur": 60
+        },
+        "income_thresholds": {
+            "umbral_1": {
+                "1": 8843,
+                "2": 13264,
+                "3": 17685,
+                "4": 22107,
+                "5": 25644,
+                "6": 29181,
+                "7": 32718,
+                "8": 36255,
+                "additional_member": 3536
+            },
+            "umbral_2": {
+                "1": 13898,
+                "2": 23724,
+                "3": 32201,
+                "4": 38242,
+                "5": 42743,
+                "6": 46142,
+                "7": 49503,
+                "8": 52850,
+                "additional_member": 3340
+            },
+            "umbral_3": {
+                "1": 14818,
+                "2": 25293,
+                "3": 34332,
+                "4": 40773,
+                "5": 45572,
+                "6": 49196,
+                "7": 52780,
+                "8": 56348,
+                "additional_member": 3561
+            }
+        },
+        "academic_requirements": {
+            "university_min_credits": 60,
+            "min_gpa": 0.0
+        },
+        "application_period": {
+            "start": "19 de marzo de 2024",
+            "end": "10 de mayo de 2024",
+            "exception_until": "31 de diciembre de 2024"
+        },
+        "hallucination_scores": {
+            "General": 0.3027,
+            "Artículo 3.": 0.5815,
+            "Artículo 11.": 0.1086,
+            "Artículo 19.": 0.162,
+            "Artículo 23.": 0.0054,
+            "Artículo 48.": 0.1376
+        }
+    }
+]

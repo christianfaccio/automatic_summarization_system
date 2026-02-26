@@ -1,97 +1,73 @@
-import fitz  #PyMuPDF
 import re
 import os
 import json
 import argparse
+from collections import defaultdict
+from pathlib import Path
+
 import torch
+from langchain_community.document_loaders import PyPDFDirectoryLoader
 from openai import OpenAI
 from transformers import AutoModelForCausalLM, AutoModelForSequenceClassification, AutoTokenizer
+
+from ir import clean_text, split_by_article
 
 LOCAL_MODEL_ID       = "Qwen/Qwen2.5-3B-Instruct"
 CLOUD_MODEL_ID       = "mistralai/mistral-small-3.2-24b-instruct"
 HALLUCINATION_MODEL_ID = "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 
-def extract_text_from_pdfs(docs_folder):
-    corpus_text = {}
+def load_corpus(docs_dir: str) -> dict:
+    loader = PyPDFDirectoryLoader(docs_dir)
+    raw_docs = loader.load()
 
-    for filename in os.listdir(docs_folder):
-        if filename.endswith(".pdf"):
-            path = os.path.join(docs_folder, filename)
-            doc = fitz.open(path)
-            full_text = []
+    for doc in raw_docs:
+        doc.page_content = clean_text(doc.page_content)
 
-            for page in doc:
-                # Obtain page dimension
-                page_rect = page.rect
-                page_height = page_rect.height
-                page_width = page_rect.width
+    chunks = split_by_article(raw_docs)
+    chunks = [c for c in chunks if len(c.page_content.strip()) >= 100]
 
-                # Compute margins
-                header_margin_percent, footer_margin_percent = 5, 10
-                left_margin_percent, right_margin_percent = 10, 10
+    source_chunks = defaultdict(list)
+    for chunk in chunks:
+        source_chunks[chunk.metadata["source"]].append(chunk)
 
-                header_margin = page_height * (header_margin_percent / 100)
-                footer_margin = page_height * (footer_margin_percent / 100)
-                left_margin = page_width * (left_margin_percent / 100)
-                right_margin = page_width * (right_margin_percent / 100)
+    result = {}
+    for source_path, doc_chunks in source_chunks.items():
+        filename = os.path.basename(source_path)
+        doc_chunks.sort(key=lambda d: d.metadata.get("page", 0))
+        full_text = "\n".join(c.page_content for c in doc_chunks)
 
-                # Create rectangle in which the important content is (no header, footer, left and right margins)
-                content_rect = fitz.Rect(left_margin, header_margin, page_width - right_margin, page_height - footer_margin)
+        articles = {}
+        for chunk in doc_chunks:
+            m = re.match(r'Art[ií]culo\.?\s+(\d+)', chunk.page_content)
+            if m:
+                key = f"Artículo {m.group(1)}."
+                articles[key] = chunk.page_content
 
-                text = page.get_text("text", clip=content_rect)
+        result[filename] = {"full_text": full_text, "articles": articles}
+        print(f"Loaded: {filename}  ({len(articles)} articles found)")
 
-                # Cleaning: Remove the common BOE footer pattern (CSV validation codes)
-                lines = [line for line in text.split('\n') if "CSV :" not in line and "DIRECCIÓN DE VALIDACIÓN" not in line]
-                full_text.append("\n".join(lines))
-
-            corpus_text[filename] = "\n".join(full_text)
-            print(f"Finished extracting text from: {filename}")
-
-    return corpus_text
-
-
-def segment_by_articles(text):
-    # Find "Artículo 1.", "Artículo 2.", etc. We divide the text by articles
-    pattern = r'(Artículo\s+\d+\.)'
-
-    # Split the text by the pattern
-    parts = re.split(pattern, text)
-
-    articles_dict = {}
-    # Iterate through the split parts (skip first part because is the header)
-    for i in range(1, len(parts), 2):
-        article_title = parts[i].strip()
-        article_content = parts[i+1].strip()
-        articles_dict[article_title] = article_content
-
-    return articles_dict
+    return result
 
 
 def load_local_model():
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL_ID)
     model = AutoModelForCausalLM.from_pretrained(
         LOCAL_MODEL_ID,
-        torch_dtype=torch.float16,
-        device_map="auto",
-    )
+        dtype=torch.float16,
+    ).to(device)
+    model.eval()
     return model, tokenizer
 
 
 def load_hallucination_model():
-    """Load the multilingual NLI model used to score factual consistency."""
     tokenizer = AutoTokenizer.from_pretrained(HALLUCINATION_MODEL_ID)
     model = AutoModelForSequenceClassification.from_pretrained(HALLUCINATION_MODEL_ID)
     model.eval()
     return model, tokenizer
 
 
-def score_factual_consistency(
-    premise: str,
-    hypothesis: str,
-    halu_model,
-    halu_tokenizer,
-) -> float:
-    """Return entailment probability: 1.0 = fully supported, 0.0 = hallucinated."""
+def score_factual_consistency(premise: str, hypothesis: str, halu_model, halu_tokenizer,) -> float:
     inputs = halu_tokenizer(
         premise,
         hypothesis,
@@ -105,10 +81,6 @@ def score_factual_consistency(
     label2id = {v: k for k, v in halu_model.config.id2label.items()}
     return probs[label2id["entailment"]].item()
 
-
-# Configuration of prompts and targets.
-# key=None means the extracted fields are merged at the top level of the document dict.
-# All keys and sub-keys mirror ir.py's output schema so summary.py can use either file.
 EXTRACTION_TASKS = {
     "General": {
         "key": None,  # top-level merge
@@ -171,19 +143,22 @@ def call_llm_for_json(prompt, context, model=None, tokenizer=None):
     full_prompt = f"TEXTO DEL DOCUMENTO: \n{context}\n\nINSTRUCCIÓN:\n{prompt}"
 
     if model is not None:
-        # Local inference via transformers
         messages = [
             {"role": "system", "content": system_msg},
             {"role": "user", "content": full_prompt},
         ]
-        input_ids = tokenizer.apply_chat_template(
+        prompt_text = tokenizer.apply_chat_template(
             messages,
             add_generation_prompt=True,
-            return_tensors="pt",
-        ).to(model.device)
+            tokenize=False,
+        )
+        inputs = tokenizer(prompt_text, return_tensors="pt").to(model.device)
+        input_ids = inputs["input_ids"]
 
         output_ids = model.generate(
             input_ids,
+            attention_mask=inputs["attention_mask"],
+            pad_token_id=tokenizer.eos_token_id,
             max_new_tokens=512,
             do_sample=False,
         )
@@ -208,11 +183,13 @@ def call_llm_for_json(prompt, context, model=None, tokenizer=None):
         content = completion.choices[0].message.content
 
     content = content.replace("```json", "").replace("```", "").strip()
+    # Collapse double-double-quoted keys/values that some models emit when the source text contains quoted spans
+    content = re.sub(r'""([^"]*?)""', r'"\1"', content)
 
     try:
         return json.loads(content)
     except json.JSONDecodeError:
-        print(f"Error decodificando JSON. El modelo respondió: {content}")
+        print(f"Error decodifying JSON.")
         return {}
 
 def extract_full_corpus_data(segmented_doc, raw_text, model=None, tokenizer=None, halu_model=None, halu_tokenizer=None):
@@ -251,8 +228,7 @@ def extract_full_corpus_data(segmented_doc, raw_text, model=None, tokenizer=None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--use-cloud', action='store_true',
-                        help='Use mistral-small-3.2-24b via OpenRouter instead of local Qwen2.5-3B')
+    parser.add_argument('--use-cloud', action='store_true', help='Use mistral-small-3.2-24b via OpenRouter instead of local Qwen2.5-3B')
     args = parser.parse_args()
 
     if args.use_cloud:
@@ -260,28 +236,26 @@ if __name__ == "__main__":
     else:
         model, tokenizer = load_local_model()
 
-    print("Loading hallucination evaluation model...")
     halu_model, halu_tokenizer = load_hallucination_model()
 
     CORPUS_DIR = "../docs"
 
-    corpus = extract_text_from_pdfs(CORPUS_DIR)
+    corpus = load_corpus(CORPUS_DIR)
 
     all_scholarships = []
 
-    for filename, text in corpus.items():
-        segmented_doc = segment_by_articles(text)
-
-        print(f"Processing file {filename}...")
+    for filename, doc_data in corpus.items():
+        print(f"\nProcessing file {filename}...")
         scholarship_data = extract_full_corpus_data(
-            segmented_doc, text,
+            doc_data["articles"], doc_data["full_text"],
             model=model, tokenizer=tokenizer,
             halu_model=halu_model, halu_tokenizer=halu_tokenizer,
         )
-        print(f"Finished processing file {filename}")
 
         all_scholarships.append(scholarship_data)
 
-    # Save the master "Ground Truth" file
-    with open("output/info_mistral.json", "w", encoding="utf-8") as f:
+    # Save the LLM extraction output
+    out_path = Path("../output/info_llm.json")
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
         json.dump(all_scholarships, f, indent=4, ensure_ascii=False)
