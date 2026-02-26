@@ -6,6 +6,35 @@
     <h6></h6>
 </div>
 
----
+--- 
 
-The objective is to develop an automatic summarization system that combines information extraction techniques (language understanding) with generative text models (language generation). Given a corpus of documents in PDF format, this system will extract structured information from the documents and generate an abstractive summary using a generative language model. The summary should concisely describe all the relevant information for users.
+### How to run the code
+
+First of all, create a virtual environment and install the dependencies:
+```
+uv venv nlp --python 3.11
+source nlp/bin/activate
+uv pip install -r requirements.txt
+```
+
+Then, from the `src/` folder run one or both the information retrieval scripts:
+```
+cd src
+uv run ir.py
+uv run nir.py
+```
+
+After that, you should be able to see in the `output/` folder the json files containing the structured output. Now you can run the generation script:
+```
+uv run generation.py
+```
+
+and you should see the generated summaries in txt format in the `output/generated_summaries` folder.
+
+>[!note]
+>Consider that if you have not already downloaded the models it could take some time to finish.
+
+Finally, you can run the evaluation script to get the score of the obtained summaries:
+```
+uv run evaluate.py
+```
