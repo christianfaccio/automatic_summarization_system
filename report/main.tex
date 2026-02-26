@@ -8,6 +8,9 @@
 \usepackage{lettrine}
 \usepackage{subcaption}
 \usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
 
 \addbibresource{references.bib} % BibLaTeX bibliography file
 
@@ -81,6 +84,32 @@ Finally, the extracted information has been written on a JSON file in a structur
 
 We divided the whole architecture in two components: the \textit{information retrieval (IR)} part and the \textit{generation} part.
 
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+node distance=1.8cm,
+box/.style={rectangle, draw, rounded corners, align=center, minimum width=4cm, minimum height=1cm}
+]
+
+\node[box] (pdf) {PDF Documents (BOE)};
+\node[box, below of=pdf] (extract) {PDF Text Extraction \\ (pdfplumber)};
+\node[box, below of=extract] (clean) {Text Preprocessing \\ Cleaning + Normalization};
+\node[box, below of=clean] (ir) {Information Extraction \\ Regex + Rules};
+\node[box, below of=ir] (json) {Structured Output \\ JSON File};
+\node[box, below of=json] (gen) {Text Generation Model \\ HuggingFace Pipeline};
+\node[box, below of=gen] (out) {Final Summary};
+
+\draw[->] (pdf) -- (extract);
+\draw[->] (extract) -- (clean);
+\draw[->] (clean) -- (ir);
+\draw[->] (ir) -- (json);
+\draw[->] (json) -- (gen);
+\draw[->] (gen) -- (out);
+
+\end{tikzpicture}
+\caption{System Architecture}
+\end{figure}
+
 \subsection{Information Retrieval}
 
 This was the part in which we spent most time on. Without correct and reliable data, the summarization cannot be done, so this is probably the most important part of the system. There are different methods to be used here, but the most common are the use of \textit{regular expressions}, which are not flexible at all but can extract information with special format like dates, the use of \textit{similarity search} between a query and the chunks of the text, which is more flexible but contains hidden difficulties like the choice of the chunking method, and finally the use of a \textit{transformer} model, which is the state of the art and is flexible, even if costly and complex. 
@@ -90,10 +119,11 @@ Thus, a better approach in this specific case is the use of regular expressions.
 
 We would like to emphasize that this method was possible just because the documents are similar in writing and format, thus the lack of flexibility of the method. But, given that we needed structured and specially formatted information, this was a good approach. The results are shown in the \texttt{info.json} file and are pretty good indeed, even if in some cases we were not able to extract all the data. Unfortunately, with small text variations this method stops working correctly. 
 
-We also used the approach with a transformer, to see and compare the performance with the former method. It is much more flexible and let us obtain better results with less manual and strict code, even with the cost of higher complexity and with some hallucination. The information for this approach have been saved, always with a structured manner, in the \texttt{info\_mistral.json} file. 
+We also implemented an alternative approach with a transformer, to see and compare the performance with the former method. With this approach we wanted to evaluate whether a transformer-based model could reduce the amount of the manual logic while improving flexibility and robustness. Unlike the previous method, which relied a lot on rules, regular expressions and specific heuristics, the LLM-based system leaves most of the semantic interpretation to the model itself. First the raw text from the PDF files is extracted and then it is segmented by articles with the use of regular expressions. After, each relevant section is provided to the LLM with a specific prompt for each section. The extracted data from all documents are then combined into a structured file: \texttt{info\_mistral.json}. This approach provided several advantages like higher flexibility and better semantic understanding. However, this approach also has certain downsides: hallucination risk, higher computational cost and output variability. To evaluate the impact of model size on performance, we experimented with several open-source LLMs ranging from 3B to 70B parameters (3B, 8B, 14B, 24B, 30B and 70B). As expected, larger models generally produced more accurate and consistent structured outputs, with the 70B model (Llama 3.3) achieving the best performance. However, when considering cost per token, inference latency and overall efficiency, the 24B parameter model (Mistral Small 3.2) offered the best balance between performance and computational cost. Smaller models were capable of completing the task, but their outputs showed a degradation in structural consistency and precision. Based on these experiments, models around 24-30B parameters appear to be the best ones for this type of structured extraction task. 
+All inferences were performed through a remote API (OpenRouter), rather than running the models locally. This inference choice simplified experimentation across multiple model sizes and use of the chosen model. Overall the LLM based approach proved to be more adaptable, if needed, and easier to extend to new formats, at the cost of increased computational complexity and potential reliability issues.
+
 
 \subsection{Generation}
-
 
 \section{Evaluation}
 
