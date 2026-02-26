@@ -154,9 +154,34 @@ Phi-3.5-mini-instruct is a compact but highly optimized instruction-tuned model 
 
 The summaries were generated from structured JSON data. Each JSON entry was transformed into a designed prompt that explicitly instructed the model to act as an academic writer, produce a structured summary of 200–250 words, and avoid inventing information. The generation process used controlled parameters, including a moderate temperature (0.4), nucleus sampling (top-p 0.9), and a repetition penalty to reduce redundancy. These settings aim to balance determinism and linguistic naturalness and limit variability across runs.
 
-In addition to summary generation, the pipeline incorporates a factual consistency analysis step. A multilingual Natural Language Inference model based on mDeBERTa-v3 is used to compute a score between the original structured data (treated as the premise) and the generated summary (treated as the hypothesis). This hallucination score serves as an observational metric to estimate the alignment between the JSON file and the generated summary. We expect Phi-3.5 and Qwen2.5-3B to produce the most coherent and factually consistent summaries due to their stronger instruction tuning, while SmolLM2-1.7B may show more variability given its smaller parameter size.
+In addition to summary generation, the pipeline incorporates a factual consistency analysis step. A multilingual Natural Language Inference model based on \texttt{mDeBERTa-v3} is used to compute a score between the original structured data (treated as the premise) and the generated summary (treated as the hypothesis). This hallucination score serves as an observational metric to estimate the alignment between the JSON file and the generated summary. We expect Phi-3.5 and Qwen2.5-3B to produce the most coherent and factually consistent summaries due to their stronger instruction tuning, while SmolLM2-1.7B may show more variability given its smaller parameter size.
 
 \section{Evaluation}
+The evaluation part of the system asseses three aspects: factual consistency of extracted information, the accuracy of the structured data extraction and the semantic quality of generated summaries. These evaluations will provide an assesment of the system performance across the pipeline.
+
+\subsection{Factual Consistenct Evaluation and Hallucination Detection}
+During the neural information retrieval part (transformer-based system), for each extraction task such as the general information, eligible programs, income threshold... hallucination scores are computed This provides factual consistenct metrics per section, so we can identify the sections where the model may have generated hallucinated content. 
+
+...
+
+\subsection{Structured Data Extraction Evaluation}
+Structured extraction accuracy is evaluated by comparing LLM-based extraction (NIR) against regex-based extraction patterns (IR). The IR component is used as ground truth for structured information extraction. This comparative approach allows a quantification of how well the neural extraction methods capture structured information relative to manual patterns.
+
+...
+
+\subsection{Summary Evaluation}
+We evaluate the generated summaries against the original source documents using \texttt{BERTScore}, which is a learned metric based on contextual embbedings from pre-trained models. The evaluation uses \texttt{XLM-RoBERTa-base}, which is a crosslingual variant of the RoBERTa model. This crosslingual model allows meaningful comparison between the Spanish documents and the generated summaries.
+
+The evaluation procedure we followed operates like this: for each language model, all generated summaries across academic years are collected, then the corresponding source texts are extracted from the original PDFs and then BERTScore is computed independently for each summary and source pair. Finally the aggregated performance of each model is computed. This way we have a comparison across models and across documents. The resulting scores are within the range [0, 1]. The closer to 1, the stronger the semantic alignment between summary and source text. Through this metric we can provide a quantitative assesment of how well each model captured the semantic content of the source documents in the summaries.
+
+\subsection{Results and Analysis}
+The structured extraction component achieved an overall performance score of 0.713 across all evaluated fields and documents, representing moderate success in capturing scholarship data. However, performance varied across field types. Fields with well defined formatting, like academic year and application period, achieved perfect scores (1.0). The total budget field achieved 0.667, indicating that numeric extraction was generally successful, though one document was skipped due to missing regex ground truth. More linguistically complex fields showed lower performance. The eligible programs field achieved only 0.332, the lowest score. These results show that structured fields containing quantitative data are extracted better than fields requiring categorical assignment.
+
+The three models used for summarization showed consistent performance. Phi-3.5-mini achieved an average BERTScore F1 of 0.793 (range 0.787–0.800), Qwen2.5-3B attained 0.805 (range 0.793–0.813), and SmolLM2-1.7B achieved 0.803 (range 0.786–0.818). These results indicate strong semantic conservation of source document content in the summaries.
+
+Per document analysis reveals small variation, as BERTScore F1 ranged from 0.786 to 0.818 across years and models. The small variation likely reflects the heterogeinity between documents and structure. The consistent ~0.80 performance across years suggests that the summarization pipeline generalizes robustly across different scholarship documents.
+
+...
 
 \section{Conclusions}
 
