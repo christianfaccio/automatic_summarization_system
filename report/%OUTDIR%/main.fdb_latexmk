@@ -1,15 +1,15 @@
 # Fdb version 4
-["biber %OUTDIR%/main"] 1772041261.59697 "%OUTDIR%/main.bcf" "%OUTDIR%/main.bbl" "%OUTDIR%/main" 1772041489.5511 0
-  "%OUTDIR%/main.bcf" 1772041489 106897 71465088a4938299bc2717397f111b05 "pdflatex"
+["biber %OUTDIR%/main"] 1772041261.59697 "%OUTDIR%/main.bcf" "%OUTDIR%/main.bbl" "%OUTDIR%/main" 1772128632.95016 0
+  "%OUTDIR%/main.bcf" 1772128632 106897 71465088a4938299bc2717397f111b05 "pdflatex"
   (generated)
   "%OUTDIR%/main.bbl"
   "%OUTDIR%/main.blg"
   (rewritten before read)
-["pdflatex"] 1772041487.41221 "c:/Users/Paula/Documents/automatic_summarization_system/report/main.tex" "main.pdf" "main" 1772041489.55185 0
-  "%OUTDIR%/main.aux" 1772041489 1083 90e6d1149a385bdd27e0fc0e8a2af2e4 "pdflatex"
+["pdflatex"] 1772128629.39174 "c:/Users/Paula/Documents/automatic_summarization_system/report/main.tex" "main.pdf" "main" 1772128632.95316 0
+  "%OUTDIR%/main.aux" 1772128632 2305 b80fafc5c93754635e58ad6e5660d886 "pdflatex"
   "%OUTDIR%/main.bbl" 1772041264 486 ee04f40f768daeed26442158e95aba61 "biber %OUTDIR%/main"
-  "%OUTDIR%/main.out" 1772041489 737 17c7fcc7a4526e0076df0ab199c87169 "pdflatex"
-  "%OUTDIR%/main.run.xml" 1772041489 2305 52095dfad395b381e9a32937e764a41c "pdflatex"
+  "%OUTDIR%/main.out" 1772128632 1670 df8a4170efce79731d7d8979bccd0779 "pdflatex"
+  "%OUTDIR%/main.run.xml" 1772128632 2305 52095dfad395b381e9a32937e764a41c "pdflatex"
   "C:/Users/Paula/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1772041195 82507 a9eef8696c92627b87e9975edea03b2a ""
   "C:/Users/Paula/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1000.pk" 1762981670 20028 a01af39428096226590f0dcb02a55f5e ""
   "C:/Users/Paula/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1762530062 24225046 54c65b0bbf350d76d51d68a8c9c15abb ""
@@ -198,8 +198,10 @@
   "C:/Users/Paula/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/Paula/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "LTJournalArticle.cls" 1771603702 10005 e38e4f05326438c9cfb0a6c6bf9f0764 ""
-  "c:/Users/Paula/Documents/automatic_summarization_system/report/main.tex" 1772041484 10569 659083e155f63231ec4680d7a6ab9223 ""
-  "main.tex" 1772041484 10569 659083e155f63231ec4680d7a6ab9223 ""
+  "assets/ass.png" 1772127958 30717 2fd7b90332c60d82a39e8ab38f273f52 ""
+  "assets/nir_diagram.png" 1772127958 134054 4a023f4b28d2667929bb81b9c576c6b6 ""
+  "c:/Users/Paula/Documents/automatic_summarization_system/report/main.tex" 1772128628 23209 65db86396a0bfcb9289a8aa971953ede ""
+  "main.tex" 1772128628 23209 65db86396a0bfcb9289a8aa971953ede ""
   (generated)
   "%OUTDIR%/main.aux"
   "%OUTDIR%/main.bcf"

@@ -390,6 +390,13 @@ INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\tex\latex\base\t1cmtt.fd
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ectt1000.tfm
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplr9c.tfm
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplri9e.tfm
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
+INPUT .\assets\ass.png
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplb9e.tfm
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplb9e.tfm
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\palatino\pplb9e.vf
@@ -442,6 +449,13 @@ INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\public\mathpazo\fpl
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\palatino\pplb9e.vf
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplb8r.tfm
 INPUT C:\Users\Paula\AppData\Local\Programs\MiKTeX\fonts\tfm\public\mathpazo\fplmb.tfm
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
+INPUT .\assets\nir_diagram.png
 INPUT c:\Users\Paula\Documents\automatic_summarization_system\report\%OUTDIR%\main.aux
 INPUT c:\Users\Paula\Documents\automatic_summarization_system\report\%OUTDIR%\main.out
 INPUT c:\Users\Paula\Documents\automatic_summarization_system\report\%OUTDIR%\main.out
