@@ -4,4 +4,6 @@
 *.out
 *.xml
 *.gz
+*.blg
+*.bbl
 __pycache__
